@@ -6,21 +6,17 @@ export class MessageHandler {
   constructor(commandManager) {
     this.commandManager = commandManager;
     this.prefix = BotConfig.prefix;
+    this.handle = this.handle.bind(this);
   }
 
   async handle(message) {
     if (!MessageValidator.isValidCommand(message, this.prefix)) return;
 
     const { commandName, args } = MessageValidator.parseCommand(message, this.prefix);
-    const command = this.commandManager.getCommand(commandName);
+    const command = await this.commandManager.getCommand(commandName);
     
     if (!command) {
       console.log(`Command not found: ${commandName}`);
-      return;
-    }
-
-    if (typeof command.execute !== 'function') {
-      console.error(`Invalid command structure for ${commandName}:`, command);
       return;
     }
 

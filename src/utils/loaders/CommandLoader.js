@@ -7,7 +7,7 @@ export class CommandLoader {
     ];
 
     for (const command of commands) {
-      if (command && typeof command.execute === 'function') {
+      if (command && command.name && typeof command.execute === 'function') {
         commandManager.registerCommand(command);
       } else {
         console.error(`Invalid command structure for command: ${command?.name}`);

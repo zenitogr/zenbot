@@ -14,7 +14,11 @@ export class Bot {
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.DirectMessages
-      ]
+      ],
+      failIfNotExists: false,
+      presence: {
+        status: 'online'
+      }
     });
     
     this.commandManager = new CommandManager(this.client);
@@ -28,7 +32,7 @@ export class Bot {
     EventLoader.loadEvents(this.eventManager);
 
     // Register message handler
-    this.client.on('messageCreate', this.messageHandler.handle.bind(this.messageHandler));
+    this.client.on('messageCreate', this.messageHandler.handle);
 
     // Login
     await this.client.login(process.env.DISCORD_BOT_TOKEN);
