@@ -22,10 +22,6 @@ export class PingCommand extends BaseCommand {
     const initialEmbed = new EmbedBuilder()
       .setTitle('🏓 Measuring Latency...')
       .setDescription('Checking connection status...')
-      .setColor('#2b2d31');
-      new EmbedBuilder()
-      .setTitle('🏓 Measuring Latency...')
-      .setDescription('Checking connection status...')
       .addFields(
         { 
           name: 'API Latency', 
