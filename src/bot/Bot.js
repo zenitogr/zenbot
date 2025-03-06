@@ -1,24 +1,31 @@
 import { Client, GatewayIntentBits } from 'discord.js';
-import { CommandHandler } from './handlers/CommandHandler.js';
+import { BotConfig } from '../config/BotConfig.js';
+import { CommandManager } from './managers/commands/CommandManager.js';
+import { EventManager } from './managers/events/EventManager.js';
+import { MessageHandler } from './handlers/MessageHandler.js';
+import { CommandLoader } from '../utils/loaders/CommandLoader.js';
+import { EventLoader } from '../utils/loaders/EventLoader.js';
 
 export class Bot {
   constructor() {
-    this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
-    this.commandHandler = new CommandHandler(this.client);
+    this.client = new Client({ 
+      intents: BotConfig.intents.map(intent => GatewayIntentBits[intent])
+    });
+    
+    this.commandManager = new CommandManager(this.client);
+    this.eventManager = new EventManager(this.client);
+    this.messageHandler = new MessageHandler(this.commandManager);
   }
 
-  start() {
-    this.setupEventListeners();
-    this.client.login(process.env.DISCORD_BOT_TOKEN);
-  }
+  async start() {
+    // Load commands and events
+    CommandLoader.loadCommands(this.commandManager);
+    EventLoader.loadEvents(this.eventManager);
 
-  setupEventListeners() {
-    this.client.once('ready', () => {
-      console.log(`Logged in as ${this.client.user.tag}!`);
-    });
+    // Register message handler
+    this.client.on('messageCreate', this.messageHandler.handle.bind(this.messageHandler));
 
-    this.client.on('messageCreate', (message) => {
-      this.commandHandler.handleMessage(message);
-    });
+    // Login
+    await this.client.login(process.env.DISCORD_BOT_TOKEN);
   }
 }

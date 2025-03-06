@@ -1,25 +1,21 @@
+import { BotConfig } from '../../config/BotConfig.js';
+import { CommandLoader } from '../../utils/CommandLoader.js';
+
 export class CommandHandler {
   constructor(client) {
     this.client = client;
-    this.prefix = '!';
-    this.commands = new Map();
-    this.registerCommands();
-  }
-
-  registerCommands() {
-    this.commands.set('ping', (message) => {
-      message.reply('Pong!');
-    });
+    this.prefix = BotConfig.prefix;
+    this.commands = CommandLoader.loadCommands();
   }
 
   handleMessage(message) {
     if (!message.content.startsWith(this.prefix)) return;
 
     const args = message.content.slice(this.prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase();
+    const commandName = args.shift().toLowerCase();
 
-    if (this.commands.has(command)) {
-      this.commands.get(command)(message, args);
+    if (this.commands.has(commandName)) {
+      this.commands.get(commandName).execute(message, args);
     }
   }
 }
