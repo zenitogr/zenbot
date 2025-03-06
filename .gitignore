@@ -1,0 +1,49 @@
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment variables
+.env*
+!.env.example
+!.env.vault
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Coverage reports
+coverage/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Cache directories
+.cache/
+.temp/
+.eslintcache
+.tsbuildinfo
+
+# Test directories
+__tests__/**/coverage/
+.nyc_output
+
+# Misc
+*.pem
+.vercel
+.turbo
