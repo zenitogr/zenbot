@@ -22,19 +22,7 @@ export class PingCommand extends BaseCommand {
     const start = performance.now(); // More precise latency tracking
 
     // Send initial response as fast as possible
-    const sent = await message.reply({
-      embeds: [{
-        color: 0x2b2d31,
-        title: '🏓 Measuring Latency...',
-        description: 'Checking connection status...',
-        fields: [
-          { name: 'API Latency', value: 'Measuring...', inline: true },
-          { name: 'WebSocket Latency', value: 'Measuring...', inline: true }
-        ],
-        timestamp: new Date().toISOString(),
-        footer: { text: 'Bot Status: Loading...' }
-      }]
-    });
+    const sent = await message.reply('🏓 Pong...');
 
     // Calculate API latency after reply is sent
     const apiLatency = Math.round(performance.now() - start);
