@@ -5,6 +5,7 @@ import { EventManager } from './managers/events/EventManager.js';
 import { MessageHandler } from './handlers/MessageHandler.js';
 import { CommandLoader } from '../utils/loaders/CommandLoader.js';
 import { EventLoader } from '../utils/loaders/EventLoader.js';
+import { EnvConfig } from '../utils/config/EnvConfig.js';
 
 export class Bot {
   constructor() {
@@ -34,7 +35,7 @@ export class Bot {
     // Register message handler
     this.client.on('messageCreate', this.messageHandler.handle);
 
-    // Login
-    await this.client.login(process.env.DISCORD_BOT_TOKEN);
+    // Login using token from environment
+    await this.client.login(EnvConfig.getBotToken());
   }
 }
