@@ -28,12 +28,34 @@ export class PingCommand extends BaseCommand {
     
     // Calculate both API and WebSocket latency
     const apiLatency = Math.abs(sent.createdTimestamp - message.createdTimestamp);
-    const wsLatency = Math.round(message.client.ws.ping);
+    
 
     // Use the worse latency for color and status
-    const worstLatency = Math.max(apiLatency, wsLatency);
+    
 
-    const responseEmbed = new EmbedBuilder()
+    const responseEmbedApiLatency = new EmbedBuilder()
+      .setTitle('🏓 Pong!')
+      .addFields(
+        { 
+          name: 'API Latency', 
+          value: `${apiLatency}ms`, 
+          inline: true 
+        },
+        {
+          name: 'WebSocket Latency',
+          value: `wait for it`,
+          inline: true
+        }
+      )
+      .setColor(this.getLatencyColor(apiLatency))
+      .setFooter({ text: 'Bot Status: ' + this.getConnectionStatus(apiLatency) })
+      .setTimestamp();
+
+      await sent.edit({ embeds: [responseEmbedApiLatency] });
+
+      const wsLatency = Math.round(message.client.ws.ping);
+
+      const responseEmbedWs = new EmbedBuilder()
       .setTitle('🏓 Pong!')
       .addFields(
         { 
@@ -47,11 +69,11 @@ export class PingCommand extends BaseCommand {
           inline: true
         }
       )
-      .setColor(this.getLatencyColor(worstLatency))
-      .setFooter({ text: 'Bot Status: ' + this.getConnectionStatus(worstLatency) })
+      .setColor(this.getLatencyColor(apiLatency))
+      .setFooter({ text: 'Bot Status: ' + this.getConnectionStatus(apiLatency) })
       .setTimestamp();
 
-    await sent.edit({ embeds: [responseEmbed] });
+    await sent.edit({ embeds: [responseEmbedWs] });
   }
 }
 
