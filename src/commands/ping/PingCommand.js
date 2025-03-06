@@ -21,7 +21,7 @@ export class PingCommand extends BaseCommand {
   async execute(message) {
 
     const initialEmbed = {
-      color: '#2b2d31',
+      color: 0x2b2d31,
       title: '🏓 Measuring Latency...',
       description: 'Checking connection status...',
       fields: [
