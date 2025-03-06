@@ -27,12 +27,12 @@ export class PingCommand extends BaseCommand {
       fields: [
         {
           name: 'API Latency',
-          value: `Measuring ms...`,
+          value: 'Measuring ms...',
           inline: true
         },
         {
           name: 'WebSocket Latency',
-          value: `Getiing ms...`,
+          value: 'Getiing ms...',
           inline: true
         }
       ],
@@ -41,7 +41,7 @@ export class PingCommand extends BaseCommand {
     };
 
     const sent = await message.reply({ embeds: [initialEmbed] });
-    
+
     const apiLatency = Math.abs(sent.createdTimestamp - message.createdTimestamp);
 
     const responseEmbedApiLatency = new EmbedBuilder()
