@@ -23,6 +23,24 @@ export class PingCommand extends BaseCommand {
       .setTitle('🏓 Measuring Latency...')
       .setDescription('Checking connection status...')
       .setColor('#2b2d31');
+      new EmbedBuilder()
+      .setTitle('🏓 Measuring Latency...')
+      .setDescription('Checking connection status...')
+      .addFields(
+        { 
+          name: 'API Latency', 
+          value: `Measuring ms...`, 
+          inline: true 
+        },
+        {
+          name: 'WebSocket Latency',
+          value: `Getiing ms...`,
+          inline: true
+        }
+      )
+      .setColor('#2b2d31')
+      .setFooter({ text: 'Bot Status: Loading...' })
+      .setTimestamp();
 
     const sent = await message.reply({ embeds: [initialEmbed] });
     
@@ -35,6 +53,7 @@ export class PingCommand extends BaseCommand {
 
     const responseEmbedApiLatency = new EmbedBuilder()
       .setTitle('🏓 Pong!')
+      .setDescription('API Latency checked!!!')
       .addFields(
         { 
           name: 'API Latency', 
@@ -43,7 +62,7 @@ export class PingCommand extends BaseCommand {
         },
         {
           name: 'WebSocket Latency',
-          value: `wait for it`,
+          value: `wait for it...`,
           inline: true
         }
       )
@@ -57,6 +76,7 @@ export class PingCommand extends BaseCommand {
 
       const responseEmbedWs = new EmbedBuilder()
       .setTitle('🏓 Pong!')
+      .setDescription('Latency check done!!!')
       .addFields(
         { 
           name: 'API Latency', 
