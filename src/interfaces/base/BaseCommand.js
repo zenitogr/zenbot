@@ -1,7 +1,10 @@
 export class BaseCommand {
-  constructor(name, description, execute) {
+  constructor(name, description) {
     this.name = name;
     this.description = description;
-    this.execute = execute;
+  }
+
+  async execute(message, args) {
+    throw new Error('Command execute method must be implemented');
   }
 }

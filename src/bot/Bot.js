@@ -9,7 +9,12 @@ import { EventLoader } from '../utils/loaders/EventLoader.js';
 export class Bot {
   constructor() {
     this.client = new Client({ 
-      intents: BotConfig.intents.map(intent => GatewayIntentBits[intent])
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.DirectMessages
+      ]
     });
     
     this.commandManager = new CommandManager(this.client);

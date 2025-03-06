@@ -7,7 +7,11 @@ export class CommandLoader {
     ];
 
     for (const command of commands) {
-      commandManager.registerCommand(command);
+      if (command && typeof command.execute === 'function') {
+        commandManager.registerCommand(command);
+      } else {
+        console.error(`Invalid command structure for command: ${command?.name}`);
+      }
     }
   }
 }

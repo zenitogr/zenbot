@@ -14,7 +14,15 @@ export class MessageHandler {
     const { commandName, args } = MessageValidator.parseCommand(message, this.prefix);
     const command = this.commandManager.getCommand(commandName);
     
-    if (!command) return;
+    if (!command) {
+      console.log(`Command not found: ${commandName}`);
+      return;
+    }
+
+    if (typeof command.execute !== 'function') {
+      console.error(`Invalid command structure for ${commandName}:`, command);
+      return;
+    }
 
     try {
       await command.execute(message, args);
