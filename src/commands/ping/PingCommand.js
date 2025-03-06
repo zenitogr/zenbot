@@ -19,74 +19,44 @@ export class PingCommand extends BaseCommand {
   }
 
   async execute(message) {
+    const start = performance.now(); // More precise latency tracking
 
-    const initialEmbed = {
-      color: 0x2b2d31,
-      title: '🏓 Measuring Latency...',
-      description: 'Checking connection status...',
-      fields: [
-        {
-          name: 'API Latency',
-          value: 'Measuring ms...',
-          inline: true
-        },
-        {
-          name: 'WebSocket Latency',
-          value: 'Getiing ms...',
-          inline: true
-        }
-      ],
-      timestamp: new Date().toISOString(),
-      footer: { text: 'Bot Status: Loading...' }
-    };
+    // Send initial response as fast as possible
+    const sent = await message.reply({
+      embeds: [{
+        color: 0x2b2d31,
+        title: '🏓 Measuring Latency...',
+        description: 'Checking connection status...',
+        fields: [
+          { name: 'API Latency', value: 'Measuring...', inline: true },
+          { name: 'WebSocket Latency', value: 'Measuring...', inline: true }
+        ],
+        timestamp: new Date().toISOString(),
+        footer: { text: 'Bot Status: Loading...' }
+      }]
+    });
 
-    const sent = await message.reply({ embeds: [initialEmbed] });
+    // Calculate API latency after reply is sent
+    const apiLatency = Math.round(performance.now() - start);
 
-    const apiLatency = Math.abs(sent.createdTimestamp - message.createdTimestamp);
+    // WebSocket latency
+    let wsLatency = Math.round(message.client.ws.ping);
+    if (isNaN(wsLatency)) wsLatency = 'N/A'; // Prevent NaN from showing
 
-    const responseEmbedApiLatency = new EmbedBuilder()
+    // Modify the existing embed instead of creating new ones
+    const updatedEmbed = new EmbedBuilder()
       .setTitle('🏓 Pong!')
-      .setDescription('API Latency checked!!!')
+      .setDescription('Latency check done!')
       .addFields(
-        {
-          name: 'API Latency',
-          value: `${apiLatency}ms`,
-          inline: true
-        },
-        {
-          name: 'WebSocket Latency',
-          value: `wait for it...`,
-          inline: true
-        }
+        { name: 'API Latency', value: `${apiLatency}ms`, inline: true },
+        { name: 'WebSocket Latency', value: `${wsLatency}ms`, inline: true }
       )
       .setColor(this.getLatencyColor(apiLatency))
       .setFooter({ text: 'Bot Status: ' + this.getConnectionStatus(apiLatency) })
       .setTimestamp();
 
-    await sent.edit({ embeds: [responseEmbedApiLatency] });
-
-    const wsLatency = Math.round(message.client.ws.ping);
-
-    const responseEmbedWs = new EmbedBuilder()
-      .setTitle('🏓 Pong!')
-      .setDescription('Latency check done!!!')
-      .addFields(
-        {
-          name: 'API Latency',
-          value: `${apiLatency}ms`,
-          inline: true
-        },
-        {
-          name: 'WebSocket Latency',
-          value: `${wsLatency}ms`,
-          inline: true
-        }
-      )
-      .setColor(this.getLatencyColor(apiLatency))
-      .setFooter({ text: 'Bot Status: ' + this.getConnectionStatus(apiLatency) })
-      .setTimestamp();
-
-    await sent.edit({ embeds: [responseEmbedWs] });
+    // Edit message ASAP
+    await sent.edit({ embeds: [updatedEmbed] });
   }
 }
 
