@@ -16,7 +16,12 @@ describe('PingCommand', () => {
 
     mockMessage = {
       createdTimestamp: 900,
-      reply: jest.fn().mockResolvedValue(mockSentMessage)
+      reply: jest.fn().mockResolvedValue(mockSentMessage),
+      client: {
+        ws: {
+          ping: 50 // Mock WebSocket ping
+        }
+      }
     };
   });
 
@@ -24,7 +29,9 @@ describe('PingCommand', () => {
     await command.execute(mockMessage);
     
     const editCall = mockSentMessage.edit.mock.calls[0][0];
+    expect(editCall.embeds[0].data.fields).toHaveLength(2);
     expect(editCall.embeds[0].data.fields[0].value).toBe('100ms');
+    expect(editCall.embeds[0].data.fields[1].value).toBe('50ms');
     expect(editCall.embeds[0].data.footer.text).toBe('Bot Status: 🟡 Good Connection');
   });
 
